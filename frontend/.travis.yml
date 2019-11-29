@@ -2,8 +2,9 @@ sudo: required
 services:
   - docker
 
+before_deploy:
+  - cd frontend
 before_install:
-  - cd frontend/
   - docker build -f Dockerfile.dev -t grimmauld/docker-udemy .
 
 script:
