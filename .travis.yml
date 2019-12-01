@@ -1,0 +1,21 @@
+sudo: required
+services:
+  - docker
+before_install:
+  - cd frontend
+  - docker build -f Dockerfile.dev -t grimmauld/docker-udemy .
+script:
+  - docker run -e CI=true grimmauld/docker-udemy npm run test
+
+deploy:
+  edge: true
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "docker-udemy"
+  env: "DockerUdemy-env"
+  bucket_name: "elasticbeanstalk-us-east-2-863400288774"
+  bucket_path: "docker-udemy"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
