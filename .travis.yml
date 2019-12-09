@@ -5,7 +5,7 @@ before_install:
   - cd fib-calculator
   - docker build -f ./client/Dockerfile.dev -t grimmauld/react-test ./client
 script:
-  - docker run grimmauld/react-test npm test  -- --coverage
+  - docker run -e CI=true grimmauld/react-test npm test
 after_success:
   - docker build -t grimmauld/multi-client ./client
   - docker build -t grimmauld/multi-nginx ./nginx
