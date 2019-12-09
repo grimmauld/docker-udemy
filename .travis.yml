@@ -2,20 +2,31 @@ sudo: required
 services:
   - docker
 before_install:
-  - cd frontend
-  - docker build -f Dockerfile.dev -t grimmauld/docker-udemy .
+  - cd fib-calculator
+  - docker build -f ./client/Dockerfile.dev -t grimmauld/react-test ./client
 script:
-  - docker run -e CI=true grimmauld/docker-udemy npm run test
-
-deploy:
-  edge: true
-  provider: elasticbeanstalk
-  region: "us-east-2"
-  app: "docker-udemy"
-  env: "DockerUdemy-env"
-  bucket_name: "elasticbeanstalk-us-east-2-863400288774"
-  bucket_path: "docker-udemy"
-  on:
-    branch: master
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: $AWS_SECRET_KEY
+  - docker run grimmauld/react-test npm test  -- --coverage
+after_success:
+  - docker build -t grimmauld/multi-client ./client
+  - docker build -t grimmauld/multi-nginx ./nginx
+  - docker build -t grimmauld/multi-server ./server
+  - docker build -t grimmauld/multi-worker ./worker
+  # Login to Docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Push images to docker hub
+  - docker push grimmauld/multi-client
+  - docker push grimmauld/multi-nginx
+  - docker push grimmauld/multi-server
+  - docker push grimmauld/multi-worker
+# deploy:
+#   edge: true
+#   provider: elasticbeanstalk
+#   region: "us-east-2"
+#  app: "docker-udemy"
+#   env: "DockerUdemy-env"
+#   bucket_name: "elasticbeanstalk-us-east-2-863400288774"
+#   bucket_path: "docker-udemy"
+#   on:
+#     branch: master
+#   access_key_id: $AWS_ACCESS_KEY
+#   secret_access_key: $AWS_SECRET_KEY
