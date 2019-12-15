@@ -18,15 +18,15 @@ after_success:
   - docker push grimmauld/multi-nginx
   - docker push grimmauld/multi-server
   - docker push grimmauld/multi-worker
-# deploy:
-#   edge: true
-#   provider: elasticbeanstalk
-#   region: "us-east-2"
-#  app: "docker-udemy"
-#   env: "DockerUdemy-env"
-#   bucket_name: "elasticbeanstalk-us-east-2-863400288774"
-#   bucket_path: "docker-udemy"
-#   on:
-#     branch: master
-#   access_key_id: $AWS_ACCESS_KEY
-#   secret_access_key: $AWS_SECRET_KEY
+deploy:
+  edge: true
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "fib-calculator"
+  env: "FibCalculator-env"
+  bucket_name: "elasticbeanstalk-us-east-2-863400288774"
+  bucket_path: "fib-calculator"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
