@@ -8,7 +8,9 @@ before_install:
   - source $HOME/google-cloud-sdk/path.bash.inc
   - gcloud components update kubectl
   - gcloud auth activate-service-account --key-file service-account.json
-  - docker build -f ./client/Dockerfile.dev -t grimmauld/react-test ./client
+  - gcloud config set project multi-k8s-187
+  - gcloud config set compute/zone us-central1-a
+  - gcloud container clusters get-credentials multi-cluster
 script:
   - docker run -e CI=true grimmauld/react-test npm test
 after_success:
