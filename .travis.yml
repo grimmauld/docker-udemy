@@ -11,29 +11,38 @@ before_install:
   - gcloud config set project multi-k8s-187
   - gcloud config set compute/zone us-central1-a
   - gcloud container clusters get-credentials multi-cluster
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker build -t grimmauld/react-test -f ./client/Dockerfile.dev ./client
 script:
   - docker run -e CI=true grimmauld/react-test npm test
-after_success:
-  - docker build -t grimmauld/multi-client ./client
-  - docker build -t grimmauld/multi-nginx ./nginx
-  - docker build -t grimmauld/multi-server ./server
-  - docker build -t grimmauld/multi-worker ./worker
-  # Login to Docker CLI
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  # Push images to docker hub
-  - docker push grimmauld/multi-client
-  - docker push grimmauld/multi-nginx
-  - docker push grimmauld/multi-server
-  - docker push grimmauld/multi-worker
 deploy:
-  edge: true
-  provider: elasticbeanstalk
-  region: "us-east-2"
-  app: "fib-calculator"
-  env: "FibCalculator-env"
-  bucket_name: "elasticbeanstalk-us-east-2-863400288774"
-  bucket_path: "fib-calculator"
+  provider: script
+  script: bash ./deploy.sh
   on:
     branch: master
-  access_key_id: $AWS_ACCESS_KEY
-  secret_access_key: $AWS_SECRET_KEY
+
+#### OLD CONFIG ###
+# after_success:
+#   - docker build -t grimmauld/multi-client ./client
+#   - docker build -t grimmauld/multi-nginx ./nginx
+#   - docker build -t grimmauld/multi-server ./server
+#   - docker build -t grimmauld/multi-worker ./worker
+#   # Login to Docker CLI
+#   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+#   # Push images to docker hub
+#   - docker push grimmauld/multi-client
+#   - docker push grimmauld/multi-nginx
+#   - docker push grimmauld/multi-server
+#   - docker push grimmauld/multi-worker
+# deploy:
+#   edge: true
+#   provider: elasticbeanstalk
+#   region: "us-east-2"
+#   app: "fib-calculator"
+#   env: "FibCalculator-env"
+#   bucket_name: "elasticbeanstalk-us-east-2-863400288774"
+#   bucket_path: "fib-calculator"
+#   on:
+#     branch: master
+#   access_key_id: $AWS_ACCESS_KEY
+#   secret_access_key: $AWS_SECRET_KEY
