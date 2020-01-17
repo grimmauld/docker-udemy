@@ -10,7 +10,6 @@ docker push grimmauld/multi-server:$SHA
 docker push grimmauld/multi-worker:$SHA
 
 kubectl apply -f k8s
-
 kubectl set image deployments/client-deployment client=grimmauld/multi-client:$SHA
 kubectl set image deployments/server-deployment server=grimmauld/multi-server:$SHA
 kubectl set image deployments/worker-deployment worker=grimmauld/multi-worker:$SHA
