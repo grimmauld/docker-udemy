@@ -1,6 +1,6 @@
 apiVersion: cert-manager.io/v1alpha2
 kind: Certificate
-metadate:
+metadata:
   name: grimmauld-org-tls
 spec:
   secretName: grimmauld-org
