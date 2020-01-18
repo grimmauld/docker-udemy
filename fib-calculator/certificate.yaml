@@ -6,7 +6,7 @@ spec:
   secretName: grimmauld-org
   issuerRef: 
     name: letsencrypt-prod
-  kind: ClusterIssuer
+    kind: ClusterIssuer
   commonName: grimmauld.org
   dnsNames:
     - grimmauld.org
